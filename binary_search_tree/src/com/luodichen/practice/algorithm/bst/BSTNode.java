@@ -7,18 +7,14 @@ public class BSTNode<K, V> {
     private BSTNode<K, V> mParent = null;
     private BSTNode<K, V> mLeftChild = null;
     private BSTNode<K, V> mRightChild = null;
-
-    int mDepth = 0;
     
-    public BSTNode(K key, int depth) {
+    public BSTNode(K key) {
         mKey = key;
-        mDepth = depth;
     }
     
-    public BSTNode(K key, V value, int depth) {
+    public BSTNode(K key, V value) {
         mKey = key;
         mValue = value;
-        mDepth = depth;
     }
     
     public void set(V value) {
@@ -55,9 +51,5 @@ public class BSTNode<K, V> {
     
     public BSTNode<K, V> getParent() {
         return mParent;
-    }
-    
-    public int getDepth() {
-        return mDepth;
     }
 }
