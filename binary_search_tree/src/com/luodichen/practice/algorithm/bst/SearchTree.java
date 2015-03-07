@@ -44,6 +44,17 @@ public class SearchTree<K extends Comparable<K>, V> implements ISearchTree<K, V>
         return null;
     }
     
+    public int getDepth(K key) {
+        int ret = -1;
+        
+        BSTNode<K, V> found = find(key);
+        if (null != found) {
+            ret = found.getDepth();
+        }
+        
+        return ret;
+    }
+    
     private BSTNode<K, V> find(K key) {
         BSTNode<K, V> ret = null;
         if (null == (ret = mRoot))
