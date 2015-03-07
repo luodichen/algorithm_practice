@@ -13,17 +13,21 @@ public class SearchTree<K extends Comparable<K>, V> implements ISearchTree<K, V>
             return;
         }
         
-        int nCompare = key.compareTo(found.getKey());
+        putOn(found, key, value);
+    }
+    
+    private void putOn(BSTNode<K, V> target, K key, V value) {
+        int nCompare = key.compareTo(target.getKey());
         if (0 == nCompare) {
-            found.set(value);
+            target.set(value);
         } else if (nCompare < 0) {
             BSTNode<K, V> node = new BSTNode<K, V>(key, value);
-            found.setLeft(node);
-            node.setParent(found);
+            target.setLeft(node);
+            node.setParent(target);
         } else {
             BSTNode<K, V> node = new BSTNode<K, V>(key, value);
-            found.setRight(node);
-            node.setParent(found);
+            target.setRight(node);
+            node.setParent(target);
         }
     }
 
@@ -67,6 +71,61 @@ public class SearchTree<K extends Comparable<K>, V> implements ISearchTree<K, V>
                 next = ret.mFound.getRight();
             }
         } while (next != null);
+        return ret;
+    }
+
+    @Override
+    public void remove(K key) {
+        BSTNode<K, V> found = find(key).mFound;
+        if (null == found)
+            return;
+        
+        BSTNode<K, V> left = found.getLeft();
+        BSTNode<K, V> right = found.getRight();
+        BSTNode<K, V> parent = found.getParent();
+        BSTNode<K, V> newChild = null;
+        
+        if (null == left && null == right) {
+            newChild = null;
+        } else if (null == left) {
+            newChild = right;
+        } else if (null == right) {
+            newChild = left;
+        } else {
+            newChild = removeMinNode(right);
+            newChild.setLeft(left);
+            left.setParent(newChild);
+            newChild.setRight(right);
+            right.setParent(newChild);
+            
+            newChild.setParent(parent);
+        }
+        
+        if (null == parent) {
+            mRoot = newChild;
+        } else if (key == parent.getLeft().getKey()) {
+            parent.setLeft(newChild);
+        } else {
+            parent.setRight(newChild);
+        }
+    }
+    
+    private BSTNode<K, V> removeMinNode(BSTNode<K, V> root) {
+        BSTNode<K, V> ret = root;
+        while (null != ret.getLeft()) {
+            ret = ret.getLeft();
+        }
+        
+        BSTNode<K, V> right = ret.getRight();
+        ret.getParent().setLeft(right);
+        
+        if (null != right) {
+            right.setParent(ret.getParent());
+        }
+        
+        ret.setParent(null);
+        ret.setRight(null);
+        
         return ret;
     }
 }
