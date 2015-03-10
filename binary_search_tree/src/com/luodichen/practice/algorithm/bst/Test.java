@@ -6,11 +6,16 @@ import java.util.Set;
 
 public class Test {
     public static void main(String args[]) {
-        System.out.println("================ Test 1 ================");
+        System.out.println("================ Test 1 (ST) ================");
+        test1(new SearchTree<Integer, Integer>());
+        System.out.println("================ Test 1 (BST) ================");
         test1(new RedBlackTree<Integer, Integer>());
-        //test1(new SearchTree<Integer, Integer>());
-        System.out.println("================ Test 2 ================");
-        //test2(new RedBlackTree<Integer, Integer>());
+        System.out.println("================ Test 2 (ST) ================");
+        test2(new SearchTree<Integer, Integer>());
+        System.out.println("================ Test 3 (ST) ================");
+        test3(new SearchTree<Integer, Integer>());
+        System.out.println("================ Test 3 (BST) ================");
+        test3(new RedBlackTree<Integer, Integer>());
     }
     
     private static void test1(SearchTree<Integer, Integer> st) {
@@ -93,5 +98,22 @@ public class Test {
             Integer got = st.get(i);
             System.out.println(i + " => " + (null == got ? "null" : got));
         }
+    }
+    
+    private static void test3(SearchTree<Integer, Integer> st) {
+        int nMaxDepth = 0, nMinDepth = 0;
+        for (int i = 0; i < 8192; i++) {
+            st.put(i, i);
+            int nDepth = st.getDepth(i);
+            
+            if (0 == i) {
+                nMaxDepth = nMinDepth = nDepth;
+            } else {
+                nMaxDepth = nDepth > nMaxDepth ? nDepth : nMaxDepth;
+                nMinDepth = nDepth < nMinDepth ? nDepth : nMinDepth;
+            }
+        }
+        
+        System.out.println("max-depth = " + nMaxDepth + " min-depth = " + nMinDepth);
     }
 }
