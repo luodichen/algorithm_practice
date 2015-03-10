@@ -31,10 +31,16 @@ public class BSTNode<K, V> {
     
     public void setLeft(BSTNode<K, V> node) {
         mLeftChild = node;
+        if (null != node) {
+            node.setParent(this);
+        }
     }
     
     public void setRight(BSTNode<K, V> node) {
         mRightChild = node;
+        if (null != node) {
+            node.setParent(this);
+        }
     }
     
     public void setParent(BSTNode<K, V> parent) {

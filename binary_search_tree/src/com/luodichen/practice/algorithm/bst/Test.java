@@ -1,26 +1,42 @@
 package com.luodichen.practice.algorithm.bst;
 
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 public class Test {
     public static void main(String args[]) {
         System.out.println("================ Test 1 ================");
-        test1();
+        test1(new RedBlackTree<Integer, Integer>());
+        //test1(new SearchTree<Integer, Integer>());
         System.out.println("================ Test 2 ================");
-        test2();
+        //test2(new RedBlackTree<Integer, Integer>());
     }
     
-    private static void test1() {
+    private static void test1(SearchTree<Integer, Integer> st) {
         int nBound = 10000000;
         int nTimes = 1000000;
         
+        Set<Integer> standard = new HashSet<Integer>();
         Random random = new Random();
-        SearchTree<Integer, Integer> st = new SearchTree<Integer, Integer>();
+        //SearchTree<Integer, Integer> st = new SearchTree<Integer, Integer>();
         
-        while (0 != nTimes--) {
-            Integer i = random.nextInt(nBound);
-            st.put(i, i);
+        for (int i = 0; i < nTimes; i++) {
+            int num = random.nextInt(nBound);
+            st.put(num, num);
+            standard.add(num);
         }
+        
+        System.out.println("total " + standard.size() + " nodes");
+        
+        for (int nTestNum : standard) {
+            Integer found = st.get(nTestNum);
+            if (null == found || nTestNum != found) {
+                System.out.println("integrity test incorrect");
+                return;
+            }
+        }
+        System.out.println("integrity test correct");
         
         for (int i = 0; i < 1000; i++) {
             Integer k = random.nextInt(nBound);
@@ -57,14 +73,14 @@ public class Test {
         System.out.println(", average-depth = " + (1.0 * lDepthTotal / nCount));
     }
     
-    private static void test2() {
+    private static void test2(SearchTree<Integer, Integer> st) {
         int nTestArray[] = {
                 100, 50, 150, 25, 75, 125, 175, 15, 35, 65, 85, 115, 135,
                 165, 185, 10, 20, 30, 40, 60, 70, 80, 90, 110, 120, 130,
                 140, 160, 170, 180, 190
         };
         
-        SearchTree<Integer, Integer> st = new SearchTree<Integer, Integer>();
+        //SearchTree<Integer, Integer> st = new SearchTree<Integer, Integer>();
         for (int i : nTestArray) {
             st.put(i, i);
         }

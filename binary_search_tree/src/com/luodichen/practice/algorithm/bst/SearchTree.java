@@ -2,7 +2,7 @@ package com.luodichen.practice.algorithm.bst;
 
 public class SearchTree<K extends Comparable<K>, V> implements ISearchTree<K, V> {
 
-    private BSTNode<K, V> mRoot = null;
+    protected BSTNode<K, V> mRoot = null;
     
     @Override
     public void put(K key, V value) {
@@ -16,18 +16,16 @@ public class SearchTree<K extends Comparable<K>, V> implements ISearchTree<K, V>
         putOn(found, key, value);
     }
     
-    private void putOn(BSTNode<K, V> target, K key, V value) {
+    protected void putOn(BSTNode<K, V> target, K key, V value) {
         int nCompare = key.compareTo(target.getKey());
         if (0 == nCompare) {
             target.set(value);
         } else if (nCompare < 0) {
             BSTNode<K, V> node = new BSTNode<K, V>(key, value);
             target.setLeft(node);
-            node.setParent(target);
         } else {
             BSTNode<K, V> node = new BSTNode<K, V>(key, value);
             target.setRight(node);
-            node.setParent(target);
         }
     }
 
@@ -47,12 +45,12 @@ public class SearchTree<K extends Comparable<K>, V> implements ISearchTree<K, V>
         return find(key).mDepth;
     }
     
-    private class FindResult {
+    protected class FindResult {
         public int mDepth = -1;
         public BSTNode<K, V> mFound = null;
     }
     
-    private FindResult find(K key) {
+    protected FindResult find(K key) {
         FindResult ret = new FindResult();
         if (null == (ret.mFound = mRoot))
             return ret;
@@ -94,9 +92,7 @@ public class SearchTree<K extends Comparable<K>, V> implements ISearchTree<K, V>
         } else {
             newChild = removeMinNode(right);
             newChild.setLeft(left);
-            left.setParent(newChild);
             newChild.setRight(right);
-            right.setParent(newChild);
             
             newChild.setParent(parent);
         }
@@ -118,10 +114,6 @@ public class SearchTree<K extends Comparable<K>, V> implements ISearchTree<K, V>
         
         BSTNode<K, V> right = ret.getRight();
         ret.getParent().setLeft(right);
-        
-        if (null != right) {
-            right.setParent(ret.getParent());
-        }
         
         ret.setParent(null);
         ret.setRight(null);
