@@ -35,35 +35,41 @@ public class RedBlackTree<K extends Comparable<K>, V> extends SearchTree<K, V> {
         }
         
         RBTNode<K, V> current = rbTarget;
-        while (null != current) {
-            current = (RBTNode<K, V>)(transform(current).getParent());
-        }
+//        while (null != current) {
+//            current = (RBTNode<K, V>)(transform(current).getParent());
+//        }
+        transform(current);
         ((RBTNode<K, V>)mRoot).setColor(RBTNode.Color.BLACK);
     }
     
-    private RBTNode<K, V> transform(RBTNode<K, V> node) {
-        RBTNode<K, V> ret = node;
+    private void transform(RBTNode<K, V> node) {
+        RBTNode<K, V> cur = node;
         
-        if (isRed((RBTNode<K, V>)ret.getRight()) && !isRed((RBTNode<K, V>)ret.getLeft())) {
-            ret = rotateLeft(ret);
-        } else if (isRed((RBTNode<K, V>)ret.getRight())) {
-            ret = flipColors(ret);
+        while (null != cur) {
+            if (isRed((RBTNode<K, V>)cur.getRight()) && !isRed((RBTNode<K, V>)cur.getLeft())) {
+                cur = rotateLeft(cur);
+            } else if (isRed((RBTNode<K, V>)cur.getRight())) {
+                cur = flipColors(cur);
+            }
+            
+            if (isRed((RBTNode<K, V>)cur) && isRed((RBTNode<K, V>)cur.getLeft())) {
+                cur = flipColors(rotateRight((RBTNode<K, V>)cur.getParent()));
+            } else {
+                cur = (RBTNode<K, V>)cur.getParent();
+            }
         }
-        
-        if (isRed((RBTNode<K, V>)ret) && isRed((RBTNode<K, V>)ret.getLeft())) {
-            ret = flipColors(rotateRight((RBTNode<K, V>)ret.getParent()));
-        }
-        
-        return ret;
     }
     
     private RBTNode<K, V> rotateRight(RBTNode<K, V> node) {
+        if (!isRed((RBTNode<K, V>)node.getLeft()) || isRed(node)) {
+            throw new RuntimeException("not supported.");
+        }
+        
         BSTNode<K, V> parent = node.getParent();
         
         RBTNode<K, V> ret = (RBTNode<K, V>)node.getLeft();
-        RBTNode.Color tColor = node.getColor();
-        node.setColor(ret.getColor());
-        ret.setColor(tColor);
+        node.setColor(RBTNode.Color.RED);
+        ret.setColor(RBTNode.Color.BLACK);
         
         node.setLeft(ret.getRight());
         ret.setRight(node);
@@ -85,6 +91,8 @@ public class RedBlackTree<K extends Comparable<K>, V> extends SearchTree<K, V> {
     }
     
     private RBTNode<K, V> rotateLeft(RBTNode<K, V> node) {
+        
+        
         BSTNode<K, V> parent = node.getParent();
         
         RBTNode<K, V> ret = (RBTNode<K, V>)node.getRight();
