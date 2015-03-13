@@ -115,4 +115,48 @@ public class RedBlackTree<K extends Comparable<K>, V> extends SearchTree<K, V> {
     private boolean isRed(RBTNode<K, V> node) {
         return (null != node) && node.isRed();
     }
+    
+    public boolean checkCorrect() {
+        CheckCorrectResult result = new CheckCorrectResult();
+        checkCorrect((RBTNode<K, V>)mRoot, 0, result);
+        return result.mCorrect;
+    }
+    
+    private class CheckCorrectResult {
+        public boolean mCorrect = true;
+        public int mLeafDepth = -1;
+    }
+    
+    private void checkCorrect(RBTNode<K, V> node, int nDepth, CheckCorrectResult result) {
+      
+        RBTNode<K, V> left = (RBTNode<K, V>)node.getLeft();
+        RBTNode<K, V> right = (RBTNode<K, V>)node.getRight();
+        
+        if (null == left && null == right) {
+            if (-1 == result.mLeafDepth) {
+                result.mLeafDepth = nDepth;
+            } else if (result.mLeafDepth != nDepth) {
+                System.out.println("red-black tree check incorrect - leaf depth doesn't match at key " + node.getKey());
+                result.mCorrect = false;
+            }
+        }
+        
+        if (null != left) {
+            if (isRed(node) && isRed(left)) {
+                System.out.println("red-black tree check incorrect - no black nodes between two red nodes at key " + node.getKey());
+                result.mCorrect = false;
+            }
+            
+            checkCorrect(left, nDepth + (isRed(left) ? 0 : 1), result);
+        }
+        
+        if (null != right) {
+            if (isRed(node) && isRed(right)) {
+                System.out.println("red-black tree check incorrect - no black nodes between two red nodes at key " + node.getKey());
+                result.mCorrect = false;
+            }
+            
+            checkCorrect(right, nDepth + (isRed(right) ? 0 : 1), result);
+        }
+    }
 }

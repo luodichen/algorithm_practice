@@ -92,17 +92,31 @@ public class SearchTree<K extends Comparable<K>, V> implements ISearchTree<K, V>
         } else {
             newChild = removeMinNode(right);
             newChild.setLeft(left);
-            newChild.setRight(right);
             
-            newChild.setParent(parent);
+            if (newChild != right) {
+                newChild.setRight(right);
+            }
+            
+            //newChild.setParent(parent);
         }
         
+        /*
         if (null == parent) {
             mRoot = newChild;
-        } else if (key == parent.getLeft().getKey()) {
+        } else if ((null != parent.getLeft()) && (key == parent.getLeft().getKey())) {
             parent.setLeft(newChild);
         } else {
             parent.setRight(newChild);
+        }
+        */
+        if (null == parent) {
+            mRoot = newChild;
+        } else if (parent.getLeft() == found) {
+            parent.setLeft(newChild);
+        } else if (parent.getRight() == found) {
+            parent.setRight(newChild);
+        } else {
+            throw new RuntimeException("It's impossible.");
         }
     }
     

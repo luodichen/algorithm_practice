@@ -12,6 +12,8 @@ public class Test {
         test1(new RedBlackTree<Integer, Integer>());
         System.out.println("================ Test 2 (ST) ================");
         test2(new SearchTree<Integer, Integer>());
+        System.out.println("================ Test 2 (BST) ================");
+        test2(new RedBlackTree<Integer, Integer>());
         System.out.println("================ Test 3 (ST) ================");
         test3(new SearchTree<Integer, Integer>());
         System.out.println("================ Test 3 (BST) ================");
@@ -42,6 +44,9 @@ public class Test {
             }
         }
         System.out.println("integrity test correct");
+        if (st instanceof RedBlackTree<?, ?> && ((RedBlackTree<?, ?>)st).checkCorrect()) {
+            System.out.println("red-black tree check correct.");
+        }
         
         for (int i = 0; i < 1000; i++) {
             Integer k = random.nextInt(nBound);
@@ -82,7 +87,7 @@ public class Test {
         int nTestArray[] = {
                 100, 50, 150, 25, 75, 125, 175, 15, 35, 65, 85, 115, 135,
                 165, 185, 10, 20, 30, 40, 60, 70, 80, 90, 110, 120, 130,
-                140, 160, 170, 180, 190
+                140, 160, 170, 180, 190, 56
         };
         
         //SearchTree<Integer, Integer> st = new SearchTree<Integer, Integer>();
@@ -90,9 +95,18 @@ public class Test {
             st.put(i, i);
         }
         
+        if (st instanceof RedBlackTree<?, ?> && ((RedBlackTree<?, ?>)st).checkCorrect()) {
+            System.out.println("red-black tree check correct.");
+        }
+
         st.remove(10);
         st.remove(100);
         st.remove(175);
+        st.remove(190);
+
+        if (st instanceof RedBlackTree<?, ?> && ((RedBlackTree<?, ?>)st).checkCorrect()) {
+            System.out.println("red-black tree check correct after remove.");
+        }
         
         for (int i : nTestArray) {
             Integer got = st.get(i);
@@ -112,6 +126,10 @@ public class Test {
                 nMaxDepth = nDepth > nMaxDepth ? nDepth : nMaxDepth;
                 nMinDepth = nDepth < nMinDepth ? nDepth : nMinDepth;
             }
+        }
+        
+        if (st instanceof RedBlackTree<?, ?> && ((RedBlackTree<?, ?>)st).checkCorrect()) {
+            System.out.println("red-black tree check correct.");
         }
         
         System.out.println("max-depth = " + nMaxDepth + " min-depth = " + nMinDepth);
