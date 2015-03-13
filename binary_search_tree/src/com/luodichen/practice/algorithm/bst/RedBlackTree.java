@@ -1,5 +1,10 @@
 package com.luodichen.practice.algorithm.bst;
 
+/*
+ * This isn't a standard Red-Black Tree, red-right child was allowed in standard
+ * Red-Black Tree, but it may not appear in this implement.
+ */
+
 public class RedBlackTree<K extends Comparable<K>, V> extends SearchTree<K, V> {
     
     @Override
@@ -114,5 +119,48 @@ public class RedBlackTree<K extends Comparable<K>, V> extends SearchTree<K, V> {
     
     private boolean isRed(RBTNode<K, V> node) {
         return (null != node) && node.isRed();
+    }
+    
+    private RBTNode<K, V> removeMinNode(RBTNode<K, V> root) {
+        RBTNode<K, V> cur = root;
+        RBTNode<K, V> ret = null;
+        while (null != cur.getLeft()) {
+            cur = (RBTNode<K, V>)cur.getLeft();
+        }
+        ret = cur;
+        cur = (RBTNode<K, V>)cur.getParent();
+        ret.getParent().setLeft(ret.getRight());
+        
+        ret.setLeft(null);
+        ret.setRight(null);
+        ret.setParent(null);
+        
+        if (isRed(ret)) {
+            return ret;
+        }
+        
+        while (null != cur) {
+            RBTNode<K, V> left = (RBTNode<K, V>)cur.getLeft();
+            RBTNode<K, V> right = (RBTNode<K, V>)cur.getRight();
+            
+            
+            
+            if (!isRed((RBTNode<K, V>)right.getLeft())) {
+                right.setColor(RBTNode.Color.RED);
+                if (isRed((RBTNode<K, V>)cur)) {
+                    cur.setColor(RBTNode.Color.BLACK);
+                    cur = rotateLeft(cur);
+                    break;
+                } else {
+                    cur = rotateLeft(cur);
+                    cur = (RBTNode<K, V>)cur.getParent();
+                    continue;
+                }
+            } else {
+                
+            }
+        }
+        
+        return ret;
     }
 }
