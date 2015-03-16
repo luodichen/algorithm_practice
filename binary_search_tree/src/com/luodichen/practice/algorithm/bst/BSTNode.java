@@ -21,6 +21,10 @@ public class BSTNode<K, V> {
         mValue = value;
     }
     
+    public void setKey(K key) {
+        mKey = key;
+    }
+    
     public V get() {
         return mValue;
     }

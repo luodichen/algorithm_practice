@@ -126,53 +126,172 @@ public class RedBlackTree<K extends Comparable<K>, V> extends SearchTree<K, V> {
         return node;
     }
     
+    private RBTNode<K, V> unfilpColors(RBTNode<K, V> node) {
+        ((RBTNode<K, V>)node.getLeft()).setColor(RBTNode.Color.RED);
+        ((RBTNode<K, V>)node.getRight()).setColor(RBTNode.Color.RED);
+        node.setColor(RBTNode.Color.BLACK);
+        
+        return node;
+    }
+    
     private boolean isRed(RBTNode<K, V> node) {
         return (null != node) && node.isRed();
     }
     
     private RBTNode<K, V> removeMinNode(RBTNode<K, V> root) {
         RBTNode<K, V> cur = root;
-        RBTNode<K, V> ret = null;
         while (null != cur.getLeft()) {
+            if (!isRed((RBTNode<K, V>)cur.getLeft()) 
+                    && null != cur.getLeft() 
+                    && !isRed((RBTNode<K, V>)cur.getLeft().getLeft())) {
+                cur = moveRedLeft(cur);
+            }
+            
             cur = (RBTNode<K, V>)cur.getLeft();
         }
-        ret = cur;
-        cur = (RBTNode<K, V>)cur.getParent();
-        ret.getParent().setLeft(ret.getRight());
         
-        ret.setLeft(null);
-        ret.setRight(null);
-        ret.setParent(null);
-        
-        if (isRed(ret)) {
-            return ret;
+        if (cur != root) {
+            RBTNode<K, V> parent = (RBTNode<K, V>)cur.getParent();
+            if (null != parent) {
+                parent.setLeft(cur.getRight());
+                //parent.setRight(cur.getRight());
+            }
+            /*
+            cur.setLeft(null);
+            cur.setRight(null);
+            cur.setParent(null);
+            */
         }
         
+        return cur;
+    }
+    
+    @Override
+    public void remove(K key) {
+        if (!isRed((RBTNode<K, V>)mRoot.getLeft()) 
+                && !isRed((RBTNode<K, V>)mRoot.getRight())) {
+            ((RBTNode<K, V>)mRoot).setColor(RBTNode.Color.RED);
+        }
+        
+        RBTNode<K, V> cur = (RBTNode<K, V>)mRoot;
+        
         while (null != cur) {
-            RBTNode<K, V> left = (RBTNode<K, V>)cur.getLeft();
-            RBTNode<K, V> right = (RBTNode<K, V>)cur.getRight();
-            
-            
-            
-            if (!isRed((RBTNode<K, V>)right.getLeft())) {
-                right.setColor(RBTNode.Color.RED);
-                if (isRed((RBTNode<K, V>)cur)) {
-                    cur.setColor(RBTNode.Color.BLACK);
-                    cur = rotateLeft(cur);
+            if (key.compareTo(cur.getKey()) < 0) {
+                if (!isRed((RBTNode<K, V>)cur.getLeft())
+                        && null != cur.getLeft()
+                        && !isRed((RBTNode<K, V>)cur.getLeft().getLeft())) {
+                    cur = moveRedLeft(cur);
+                }
+                cur = (RBTNode<K, V>)cur.getLeft();
+            } else {
+                if (isRed((RBTNode<K, V>)cur.getLeft())) {
+                    cur = rotateRight(cur);
+                }
+                if (0 == key.compareTo(cur.getKey()) && null == cur.getRight()) {
+                    RBTNode<K, V> parent = (RBTNode<K, V>)cur.getParent();
+                    if (null != parent) {
+                        if (parent.getLeft() == cur) {
+                            parent.setLeft(cur.getLeft());
+                        } else {
+                            parent.setRight(cur.getLeft());
+                        }
+                    } else {
+                        mRoot = null;
+                    }
+                    
+                    break;
+                }
+                if (!isRed((RBTNode<K, V>)cur.getRight())
+                        && null != cur.getRight()
+                        && !isRed((RBTNode<K, V>)cur.getRight().getLeft())) {
+                    cur = moveRedRight(cur);
+                }
+                if (0 == key.compareTo(cur.getKey())) {
+                    RBTNode<K, V> minNode = removeMinNode((RBTNode<K, V>)cur.getRight());
+                    cur.setKey(minNode.getKey());
+                    cur.set(minNode.get());
+                    cur = (RBTNode<K, V>)minNode.getParent();
                     break;
                 } else {
-                    cur = rotateLeft(cur);
-                    cur = (RBTNode<K, V>)cur.getParent();
-                    continue;
+                    cur = (RBTNode<K, V>)cur.getRight();
                 }
-            } else {
-                
             }
+        }
+        
+        if (null != cur) {
+            balance(cur);
+        }
+        
+        if (null != mRoot) {
+            ((RBTNode<K, V>)mRoot).setColor(RBTNode.Color.BLACK);
+        }
+    }
+    
+    private void balance(RBTNode<K, V> node) {
+        RBTNode<K, V> cur = node;
+        
+        while (null != cur) {
+            if (isRed((RBTNode<K, V>)cur.getRight())) {
+                cur = rotateLeft(cur);
+            }
+            /*
+            if (isRed((RBTNode<K, V>)cur.getRight()) && !isRed((RBTNode<K, V>)cur.getLeft())) {
+                cur = rotateLeft(cur);
+            } else if (isRed((RBTNode<K, V>)cur.getRight())) {
+                cur = flipColors(cur);
+            }
+            
+            if (isRed((RBTNode<K, V>)cur) && isRed((RBTNode<K, V>)cur.getLeft())) {
+                cur = flipColors(rotateRight((RBTNode<K, V>)cur.getParent()));
+            } else {
+                cur = (RBTNode<K, V>)cur.getParent();
+            }
+            */
+            if (isRed((RBTNode<K, V>)cur.getRight()) && !isRed((RBTNode<K, V>)cur.getLeft())) {
+                cur = (RBTNode<K, V>)rotateLeft(cur);
+            }
+            if (isRed((RBTNode<K, V>)cur.getLeft()) && null != cur.getLeft()
+                    && isRed((RBTNode<K, V>)cur.getLeft().getLeft())) {
+                cur = (RBTNode<K, V>)rotateRight(cur);
+            }
+            if (isRed((RBTNode<K, V>)cur.getLeft()) && isRed((RBTNode<K, V>)cur.getRight())) {
+                cur = flipColors(cur);
+            } else {
+                cur = (RBTNode<K, V>)cur.getParent();
+            }
+            
+            //cur = (RBTNode<K, V>)cur.getParent();
+        }
+    }
+
+    private RBTNode<K, V> moveRedLeft(RBTNode<K, V> node) {
+        if (!isRed(node)) {
+            throw new RuntimeException("node must be red, there is something wrong...");
+        }
+        
+        RBTNode<K, V> ret = node;
+        unfilpColors(ret);
+        if (null != ret.getRight() && isRed((RBTNode<K, V>)ret.getRight().getLeft())) {
+            ret.setRight(rotateRight((RBTNode<K, V>)ret.getRight()));
+            ret = rotateLeft(ret);
         }
         
         return ret;
     }
     
+    private RBTNode<K, V> moveRedRight(RBTNode<K, V> node) {
+        if (!isRed(node)) {
+            throw new RuntimeException("node must be red, there is something wrong...");
+        }
+        
+        RBTNode<K, V> ret = node;
+        unfilpColors(ret);
+        if (null != node.getLeft() && !isRed((RBTNode<K, V>)node.getLeft().getLeft())) {
+            ret = rotateRight(ret);
+        }
+        
+        return ret;
+    }
     
     public boolean checkCorrect() {
         CheckCorrectResult result = new CheckCorrectResult();
@@ -211,6 +330,9 @@ public class RedBlackTree<K extends Comparable<K>, V> extends SearchTree<K, V> {
         if (null != right) {
             if (isRed(node) && isRed(right)) {
                 System.out.println("red-black tree check incorrect - no black nodes between two red nodes at key " + node.getKey());
+                result.mCorrect = false;
+            } else if (isRed(right)) {
+                System.out.println("red-black tree check incorrect - right-red node at key " + node.getKey());
                 result.mCorrect = false;
             }
             

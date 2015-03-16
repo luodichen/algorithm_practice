@@ -99,7 +99,7 @@ public class Test {
             System.out.println("red-black tree check correct.");
         }
 
-        st.remove(10);
+        //st.remove(10);
         st.remove(100);
         st.remove(175);
         st.remove(190);
