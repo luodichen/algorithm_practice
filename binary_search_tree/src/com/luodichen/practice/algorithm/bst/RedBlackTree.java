@@ -159,12 +159,17 @@ public class RedBlackTree<K extends Comparable<K>, V> extends SearchTree<K, V> {
     
     @Override
     public void remove(K key) {
+        if (null == mRoot) {
+            return;
+        }
+        
         if (!isRed((RBTNode<K, V>)mRoot.getLeft()) 
                 && !isRed((RBTNode<K, V>)mRoot.getRight())) {
             ((RBTNode<K, V>)mRoot).setColor(RBTNode.Color.RED);
         }
         
         RBTNode<K, V> cur = (RBTNode<K, V>)mRoot;
+        RBTNode<K, V> prev = null;
         
         while (null != cur) {
             if (key.compareTo(cur.getKey()) < 0) {
@@ -173,6 +178,7 @@ public class RedBlackTree<K extends Comparable<K>, V> extends SearchTree<K, V> {
                         && !isRed((RBTNode<K, V>)cur.getLeft().getLeft())) {
                     cur = moveRedLeft(cur);
                 }
+                prev = cur;
                 cur = (RBTNode<K, V>)cur.getLeft();
             } else {
                 if (isRed((RBTNode<K, V>)cur.getLeft())) {
@@ -208,6 +214,7 @@ public class RedBlackTree<K extends Comparable<K>, V> extends SearchTree<K, V> {
                     cur = (RBTNode<K, V>)minNode.getParent();
                     break;
                 } else {
+                    prev = cur;
                     cur = (RBTNode<K, V>)cur.getRight();
                 }
             }
@@ -215,6 +222,8 @@ public class RedBlackTree<K extends Comparable<K>, V> extends SearchTree<K, V> {
         
         if (null != cur) {
             balance(cur);
+        } else if (null != prev) {
+            balance(prev);
         }
         
         if (null != mRoot) {
