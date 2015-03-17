@@ -90,7 +90,6 @@ public class Test {
                 140, 160, 170, 180, 190, 56
         };
         
-        //SearchTree<Integer, Integer> st = new SearchTree<Integer, Integer>();
         for (int i : nTestArray) {
             st.put(i, i);
         }
@@ -99,15 +98,18 @@ public class Test {
             System.out.println("red-black tree check correct.");
         }
 
-        //st.remove(10);
-        st.remove(100);
-        st.remove(175);
-        st.remove(190);
-
-        if (st instanceof RedBlackTree<?, ?> && ((RedBlackTree<?, ?>)st).checkCorrect()) {
-            System.out.println("red-black tree check correct after remove.");
+        for (int i : nTestArray) {
+            System.out.println("removing " + i);
+            st.remove(i);
+            if (st instanceof RedBlackTree<?, ?> && ((RedBlackTree<?, ?>)st).checkCorrect()) {
+                System.out.println("red-black tree check correct after remove.");
+            }
+            
+            for (int j : nTestArray) {
+                Integer got = st.get(j);
+                System.out.println(j + " => " + (null == got ? "null" : got));
+            }
         }
-        
         for (int i : nTestArray) {
             Integer got = st.get(i);
             System.out.println(i + " => " + (null == got ? "null" : got));

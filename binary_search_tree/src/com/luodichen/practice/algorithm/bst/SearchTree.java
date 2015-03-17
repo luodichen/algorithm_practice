@@ -96,12 +96,11 @@ public class SearchTree<K extends Comparable<K>, V> implements ISearchTree<K, V>
             if (newChild != right) {
                 newChild.setRight(right);
             }
-            
-            //newChild.setParent(parent);
         }
 
         if (null == parent) {
             mRoot = newChild;
+            if (null != mRoot) mRoot.setParent(null);
         } else if (parent.getLeft() == found) {
             parent.setLeft(newChild);
         } else if (parent.getRight() == found) {

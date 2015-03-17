@@ -35,9 +35,6 @@ public class RedBlackTree<K extends Comparable<K>, V> extends SearchTree<K, V> {
         }
         
         RBTNode<K, V> current = rbTarget;
-//        while (null != current) {
-//            current = (RBTNode<K, V>)(transform(current).getParent());
-//        }
         transform(current);
         ((RBTNode<K, V>)mRoot).setColor(RBTNode.Color.BLACK);
     }
@@ -154,13 +151,7 @@ public class RedBlackTree<K extends Comparable<K>, V> extends SearchTree<K, V> {
             RBTNode<K, V> parent = (RBTNode<K, V>)cur.getParent();
             if (null != parent) {
                 parent.setLeft(cur.getRight());
-                //parent.setRight(cur.getRight());
             }
-            /*
-            cur.setLeft(null);
-            cur.setRight(null);
-            cur.setParent(null);
-            */
         }
         
         return cur;
@@ -199,6 +190,7 @@ public class RedBlackTree<K extends Comparable<K>, V> extends SearchTree<K, V> {
                         mRoot = null;
                     }
                     
+                    cur = (RBTNode<K, V>)parent;
                     break;
                 }
                 if (!isRed((RBTNode<K, V>)cur.getRight())
@@ -208,6 +200,9 @@ public class RedBlackTree<K extends Comparable<K>, V> extends SearchTree<K, V> {
                 }
                 if (0 == key.compareTo(cur.getKey())) {
                     RBTNode<K, V> minNode = removeMinNode((RBTNode<K, V>)cur.getRight());
+                    if (minNode == cur.getRight()) {
+                        cur.setRight(null);
+                    }
                     cur.setKey(minNode.getKey());
                     cur.set(minNode.get());
                     cur = (RBTNode<K, V>)minNode.getParent();
@@ -231,24 +226,13 @@ public class RedBlackTree<K extends Comparable<K>, V> extends SearchTree<K, V> {
         RBTNode<K, V> cur = node;
         
         while (null != cur) {
-            if (isRed((RBTNode<K, V>)cur.getRight())) {
-                cur = rotateLeft(cur);
-            }
-            /*
-            if (isRed((RBTNode<K, V>)cur.getRight()) && !isRed((RBTNode<K, V>)cur.getLeft())) {
-                cur = rotateLeft(cur);
-            } else if (isRed((RBTNode<K, V>)cur.getRight())) {
-                cur = flipColors(cur);
-            }
-            
-            if (isRed((RBTNode<K, V>)cur) && isRed((RBTNode<K, V>)cur.getLeft())) {
-                cur = flipColors(rotateRight((RBTNode<K, V>)cur.getParent()));
-            } else {
-                cur = (RBTNode<K, V>)cur.getParent();
-            }
-            */
-            if (isRed((RBTNode<K, V>)cur.getRight()) && !isRed((RBTNode<K, V>)cur.getLeft())) {
+            if (isRed((RBTNode<K, V>)cur.getRight()) 
+                    && !isRed((RBTNode<K, V>)cur.getLeft())
+                    && !isRed(cur)) {
                 cur = (RBTNode<K, V>)rotateLeft(cur);
+            }
+            if (isRed((RBTNode<K, V>)cur.getLeft()) && isRed((RBTNode<K, V>)cur.getRight())) {
+                cur = flipColors(cur);
             }
             if (isRed((RBTNode<K, V>)cur.getLeft()) && null != cur.getLeft()
                     && isRed((RBTNode<K, V>)cur.getLeft().getLeft())) {
@@ -256,11 +240,9 @@ public class RedBlackTree<K extends Comparable<K>, V> extends SearchTree<K, V> {
             }
             if (isRed((RBTNode<K, V>)cur.getLeft()) && isRed((RBTNode<K, V>)cur.getRight())) {
                 cur = flipColors(cur);
-            } else {
-                cur = (RBTNode<K, V>)cur.getParent();
             }
             
-            //cur = (RBTNode<K, V>)cur.getParent();
+            cur = (RBTNode<K, V>)cur.getParent();
         }
     }
 
@@ -305,7 +287,11 @@ public class RedBlackTree<K extends Comparable<K>, V> extends SearchTree<K, V> {
     }
     
     private void checkCorrect(RBTNode<K, V> node, int nDepth, CheckCorrectResult result) {
-      
+        if (null == node) {
+            result.mCorrect = true;
+            return;
+        }
+        
         RBTNode<K, V> left = (RBTNode<K, V>)node.getLeft();
         RBTNode<K, V> right = (RBTNode<K, V>)node.getRight();
         
@@ -331,7 +317,8 @@ public class RedBlackTree<K extends Comparable<K>, V> extends SearchTree<K, V> {
             if (isRed(node) && isRed(right)) {
                 System.out.println("red-black tree check incorrect - no black nodes between two red nodes at key " + node.getKey());
                 result.mCorrect = false;
-            } else if (isRed(right)) {
+            }
+            if (isRed(right)) {
                 System.out.println("red-black tree check incorrect - right-red node at key " + node.getKey());
                 result.mCorrect = false;
             }
