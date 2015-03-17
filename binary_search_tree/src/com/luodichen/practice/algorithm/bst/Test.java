@@ -98,7 +98,8 @@ public class Test {
             System.out.println("red-black tree check correct.");
         }
 
-        for (int i : nTestArray) {
+        //for (int i : nTestArray) {
+        for (int i = 0; i < 200; i++) {
             System.out.println("removing " + i);
             st.remove(i);
             if (st instanceof RedBlackTree<?, ?> && ((RedBlackTree<?, ?>)st).checkCorrect()) {
