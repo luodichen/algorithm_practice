@@ -1,6 +1,8 @@
 package com.luodichen.practice.algorithm.bst;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
@@ -18,6 +20,10 @@ public class Test {
         test3(new SearchTree<Integer, Integer>());
         System.out.println("================ Test 3 (BST) ================");
         test3(new RedBlackTree<Integer, Integer>());
+        System.out.println("================ Test 4 (RND) ================");
+        test4(new SearchTree<Integer, Integer>(), new RedBlackTree<Integer, Integer>(), 100000, true);
+        System.out.println("================ Test 4 (CNT) ================");
+        test4(new SearchTree<Integer, Integer>(), new RedBlackTree<Integer, Integer>(), 100000, false);
     }
     
     private static void test1(SearchTree<Integer, Integer> st) {
@@ -136,5 +142,95 @@ public class Test {
         }
         
         System.out.println("max-depth = " + nMaxDepth + " min-depth = " + nMinDepth);
+    }
+    
+    private static void test4(SearchTree<Integer, Integer> st, 
+            RedBlackTree<Integer, Integer> rbt, int nSize, boolean bRandom) {
+        
+        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+        
+        int nBound = 10 * nSize;
+        int nPutData[] = new int[nSize];
+        
+        Random random = new Random();
+        for (int i = 0; i < nSize; i++) {
+            nPutData[i] = bRandom ? random.nextInt(nBound) : i;
+        }
+        
+        long lTimeStamp = System.currentTimeMillis();
+        for (int i = 0; i < nSize; i++) {
+            st.put(nPutData[i], nPutData[i]);
+        }
+        System.out.println("[Put Method] Binary Search Tree cost " 
+                + (System.currentTimeMillis() - lTimeStamp) + " ms");
+        
+        lTimeStamp = System.currentTimeMillis();
+        for (int i = 0; i < nSize; i++) {
+            rbt.put(nPutData[i], nPutData[i]);
+        }
+        System.out.println("[Put Method] Red-Black Tree cost " 
+                + (System.currentTimeMillis() - lTimeStamp) + " ms");
+        
+        lTimeStamp = System.currentTimeMillis();
+        for (int i = 0; i < nSize; i++) {
+            map.put(nPutData[i], nPutData[i]);
+        }
+        System.out.println("[Put Method] Java Map cost " 
+                + (System.currentTimeMillis() - lTimeStamp) + " ms");
+        
+        int nGetData[] = new int[nSize];
+        for (int i = 0; i < nSize; i++) {
+            nGetData[i] = random.nextInt(nBound);
+        }
+        
+        lTimeStamp = System.currentTimeMillis();
+        for (int i = 0; i < nSize; i++) {
+            st.get(nGetData[i]);
+        }
+        System.out.println("[Get Method] Binary Search Tree cost "
+                + (System.currentTimeMillis() - lTimeStamp) + " ms");
+        
+        lTimeStamp = System.currentTimeMillis();
+        for (int i = 0; i < nSize; i++) {
+            rbt.get(nGetData[i]);
+        }
+        System.out.println("[Get Method] Red-Black Tree cost "
+                + (System.currentTimeMillis() - lTimeStamp) + " ms");
+        
+        lTimeStamp = System.currentTimeMillis();
+        for (int i = 0; i < nSize; i++) {
+            map.get(nGetData[i]);
+        }
+        System.out.println("[Get Method] Java Map cost "
+                + (System.currentTimeMillis() - lTimeStamp) + " ms");
+        
+        int nRemoveData[] = new int[nSize];
+        for (int i = 0; i < nSize; i++) {
+            nRemoveData[i] = random.nextInt(nBound);
+        }
+        
+        lTimeStamp = System.currentTimeMillis();
+        for (int i = 0; i < nSize; i++) {
+            st.remove(nRemoveData[i]);
+        }
+        System.out.println("[Remove Method] Binary Search Tree cost "
+                + (System.currentTimeMillis() - lTimeStamp) + " ms");
+        
+        lTimeStamp = System.currentTimeMillis();
+        for (int i = 0; i < nSize; i++) {
+            rbt.remove(nRemoveData[i]);
+        }
+        System.out.println("[Remove Method] Red-Black Tree cost "
+                + (System.currentTimeMillis() - lTimeStamp) + " ms");
+        if (rbt.checkCorrect()) {
+            System.out.println("Red-Black Tree check correct");
+        }
+        
+        lTimeStamp = System.currentTimeMillis();
+        for (int i = 0; i < nSize; i++) {
+            map.remove(nRemoveData[i]);
+        }
+        System.out.println("[Remove Method] Java Map cost "
+                + (System.currentTimeMillis() - lTimeStamp) + " ms");
     }
 }
