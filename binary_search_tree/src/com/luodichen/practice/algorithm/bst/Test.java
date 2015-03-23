@@ -1,10 +1,10 @@
 package com.luodichen.practice.algorithm.bst;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.TreeMap;
 
 public class Test {
     public static void main(String args[]) {
@@ -147,7 +147,7 @@ public class Test {
     private static void test4(SearchTree<Integer, Integer> st, 
             RedBlackTree<Integer, Integer> rbt, int nSize, boolean bRandom) {
         
-        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+        Map<Integer, Integer> map = new TreeMap<Integer, Integer>();
         
         int nBound = 10 * nSize;
         int nPutData[] = new int[nSize];
