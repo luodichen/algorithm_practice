@@ -4,7 +4,10 @@ import java.util.Random;
 
 public class Test {
     public static void main(String args[]) {
+        System.out.println("================ Test 1 (SS) ================");
         test1(new SelectionSort<Integer>());
+        System.out.println("================ Test 1 (IS) ================");
+        test1(new InsertionSort<Integer>());
     }
     
     public static void test1(ISort<Integer> sort) {
