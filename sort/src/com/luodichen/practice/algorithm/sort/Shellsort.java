@@ -7,9 +7,6 @@ public class Shellsort<T extends Comparable<T>> implements ISort<T> {
         int len = a.length;
         
         for (int step = step(len); step > 0; step = nextStep(step)) {
-            if (1 == step) {
-                step = 1;
-            }
             for (int i = 0; i < step; i++) {
                 for (int j = i + step; j < len; j += step) {
                     int cur = j;
