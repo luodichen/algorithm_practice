@@ -6,20 +6,17 @@ public class Shellsort<T extends Comparable<T>> implements ISort<T> {
     public void sort(T[] a) {
         int len = a.length;
         
-        for (int step = step(len); step > 0; step = nextStep(step)) {
-            for (int i = 0; i < step; i++) {
-                for (int j = i + step; j < len; j += step) {
-                    int cur = j;
-                    while (cur > i && a[cur].compareTo(a[cur - step]) < 0) {
+        for (int step = step(len); step > 0; step = nextStep(step)) 
+            for (int i = 0; i < step; i++) 
+                for (int j = i + step; j < len; j += step) 
+                    for (int cur = j; 
+                            cur > i && a[cur].compareTo(a[cur - step]) < 0; 
+                            cur -= step) {
+                        
                         T tmp = a[cur];
                         a[cur] = a[cur - step];
                         a[cur - step] = tmp;
-                        
-                        cur -= step;
                     }
-                }
-            }
-        }
     }
     
     protected int step(int length) {
