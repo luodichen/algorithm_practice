@@ -20,12 +20,12 @@ public class QuickSort<T extends Comparable<T>> implements ISort<T> {
                 right--;
             
             if (left != right) {
-                exchange(a, left, right);
+                swap(a, left, right);
             }
         }
         
         int split = (a[left].compareTo(a[lo]) <= 0) ? left : (left - 1);
-        exchange(a, lo, split);
+        swap(a, lo, split);
         
         if (split > lo)
             sort(a, lo, split - 1);
@@ -34,7 +34,7 @@ public class QuickSort<T extends Comparable<T>> implements ISort<T> {
             sort(a, split + 1, hi);
     }
     
-    private void exchange(T[] a, int i, int j) {
+    private void swap(T[] a, int i, int j) {
         T tmp = a[i];
         a[i] = a[j];
         a[j] = tmp;

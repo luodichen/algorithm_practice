@@ -13,9 +13,7 @@ public class Shellsort<T extends Comparable<T>> implements ISort<T> {
                             cur > i && a[cur].compareTo(a[cur - step]) < 0; 
                             cur -= step) {
                         
-                        T tmp = a[cur];
-                        a[cur] = a[cur - step];
-                        a[cur - step] = tmp;
+                        swap(a, cur, cur - step);
                     }
     }
     
@@ -29,5 +27,11 @@ public class Shellsort<T extends Comparable<T>> implements ISort<T> {
     
     protected int nextStep(int step) {
         return step / 3;
+    }
+    
+    private void swap(T[] a, int i, int j) {
+        T tmp = a[i];
+        a[i] = a[j];
+        a[j] = tmp;
     }
 }

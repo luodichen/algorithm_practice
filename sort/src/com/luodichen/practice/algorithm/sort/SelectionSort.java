@@ -11,9 +11,14 @@ public class SelectionSort<T extends Comparable<T>> implements ISort<T> {
             for (int j = i; j < length; j++) {
                 if (a[j].compareTo(a[min]) < 0) min = j;
             }
-            T tmp = a[i];
-            a[i] = a[min];
-            a[min] = tmp;
+           
+            swap(a, i, min);
         }
+    }
+    
+    private void swap(T[] a, int i, int j) {
+        T tmp = a[i];
+        a[i] = a[j];
+        a[j] = tmp;
     }
 }
