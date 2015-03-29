@@ -30,6 +30,9 @@ public class Test {
         System.out.println("================ Test 1 (MS) ================");
         System.arraycopy(array, 0, testArray, 0, nSize);
         test1(testArray, new MergeSort<Integer>());
+        System.out.println("================ Test 1 (QS) ================");
+        System.arraycopy(array, 0, testArray, 0, nSize);
+        test1(testArray, new QuickSort<Integer>());
     }
     
     public static void test1(Integer array[], ISort<Integer> sort) {
