@@ -56,7 +56,8 @@ public abstract class PriorityQueue<T> {
         while (index * 2 < size) {
             T parent = mHeap.get(index);
             index *= 2;
-            if ((index + 1 < size) && compare(mHeap.get(index + 1), mHeap.get(index)) < 0) {
+            if ((index + 1 < size) 
+                    && compare(mHeap.get(index + 1), mHeap.get(index)) < 0) {
                 index++;
             }
             
